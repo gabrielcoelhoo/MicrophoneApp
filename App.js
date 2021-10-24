@@ -9,26 +9,20 @@
  style
  */
 
-//import components to be used and camera and video functionalities
+//import components to be used 
 
 import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { View, StyleSheet, Button, Text } from 'react-native';
 import { Audio } from 'expo-av';
 
 let recording = new Audio.Recording();
 
+//set the useStates as false which will be changed when start an action
 export default function App() {
-
-  //set the useStates as false which will be changed when start an action
-  const [current, setCurrent] = useState('Home');
   const [RecordedURI, SetRecordedURI] = useState('');
   const [AudioPerm, SetAudioPerm] = useState(false);
   const [isRecording, SetisRecording] = useState(false);
   const [isPLaying, SetisPLaying] = useState(false);
-
-  //react hooks to play a new audio
   const Player = useRef(new Audio.Sound());
 
   useEffect(() => {
@@ -42,7 +36,6 @@ export default function App() {
   };
 
   //actions of start and stop audio and recordings
-
   const startRecording = async () => {
     if (AudioPerm === true) {
       try {
@@ -71,14 +64,13 @@ export default function App() {
     }
   };
 
-  //playsound - code to execute a file after the recording 
+//playsound - code to execute a file after the recording 
   //reference 
   //https://stackoverflow.com/questions/67207450/how-can-i-play-a-sound-after-recording-in-react-native-expo
-
   const playSound = async () => {
     try {
       const result = await Player.current.loadAsync(
-        { uri: RecordedURI }, // RecordedURI - this is the parameter where is allocated the audio file
+        { uri: RecordedURI },// RecordedURI - this is the parameter where is allocated the audio file
         {},
         true
       );
@@ -107,23 +99,13 @@ export default function App() {
     }
   };
 
-  const HomeScreen = (
+  return (
     <View style={styles.container}>
-      <View style={styles.text1Page}>
+      <View style={styles.textPage}>
         <Text>Welcome to the Audio Recording App</Text>
         <Text>Now you can record any song at any place</Text>
-      </View>
+        </View>
       <View style={styles.buttonsSpace}/>
-      <Button color="#ff5c5c"
-        title="Start"
-        onPress={() => setCurrent(AudioRecordingScreen)}
-      ></Button>
-    
-    </View>
-  );
-
-  const AudioRecordingScreen = (
-    <View style={styles.container}>
       <Button color="#0000CC"
         title={isRecording ? 'Stop Recording' : 'Start Recording'}
         onPress={isRecording ? () => stopRecording() : () => startRecording()}
@@ -133,41 +115,23 @@ export default function App() {
         title="Play Sound"
         onPress={isPLaying ? () => stopSound : () => playSound()}
       />
-     <View style={styles.buttonsSpace}/>
-      <Button color="#3399FF"
-        title="Back"
-        onPress={() => setCurrent(HomeScreen)}
-      ></Button>
       
     </View>
   );
-
-  return current === 'Home' ? HomeScreen : current;
-
 }
+
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
     flex: 1,
     justifyContent: 'center',
-    marginTop: 70,
-  },
-  text1Page: {
-    alignItems: 'center',
+    backgroundColor: '#ecf0f1',
+    padding: 8,
   },
   buttonsSpace: {
-    width: 20, // or whatever size you need
+    width: 20, 
     height: 20,
   },
+  textPage: {
+    alignItems: 'center',
+  },
 });
-
-
-
-//references
-
-//api for audio called expo-av
-//https://docs.expo.dev/versions/latest/sdk/audio/
-
-//multiple screen
-//https://www.youtube.com/watch?v=IqYdpUFpzJU
-
